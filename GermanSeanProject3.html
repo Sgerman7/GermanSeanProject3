@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <title>Particle System</title>
+ <meta charset="utf-8">
+ <style>
+canvas {
+ border: 1px solid black;;
+}
+</style>
+ <script>
+ var canvas;
+ var context;
+ var particles;
+ var timer;
+ var timerRestart;
+ function makeParticles() {
+	//create an array of particles for our animation
+	particles = [];
+	for(var i = 0; i < 40; i++)
+	{
+		particles.push(new Particle());
+    particles[i].type = shape();
+	}
+ }
+ function degreesToRadians(degrees) {
+	 //converts from degrees to radians and returns
+	 return (degrees * Math.PI)/180;
+ }
+ function Particle()
+ {
+	 //the constructor for a single particle, with random starting x+y, velocity, color, and radius
+	 //this.x = Math.random()*canvas.width;
+	 //this.y = Math.random()*canvas.height;
+	 this.x = canvas.width/2;
+	 this.y = canvas.height/2;
+	 this.vx = Math.random()*10-5;
+	 this.vy = Math.random()*10-5;
+	 var colors = ["red", "Crimson ", "DarkRed ", "orange", "FireBrick ", "DarkOrange", "white"];
+	 this.color = colors[Math.floor(Math.random()*colors.length)];
+	 this.radius = 30;
+ }
+ function moveParticles() {
+	 //partially clear the screen to fade previous circles, and draw a new particle at each new coordinate
+	 context.globalCompositeOperation = "source-atop";
+	 context.fillStyle = "rgba(0, 0, 0, 0.3)";
+	 context.fillRect(0, 0, canvas.width, canvas.height);
+	 context.globalCompositeOperation = "lighter";
+context.font = "30px Carton Six";
+context.fillStyle = "red";
+context.textAlign = "center";
+context.fillText("German", canvas.width/2, canvas.height/2); 
+	 for(var i = 0; i < particles.length; i++)
+	 {
+		 var p = particles[i];
+     switch(p.type){
+       case "star":
+        star(4,p.x,p.y);
+        break;
+      case "triangle":
+        triangle(1,p.x,p.y);
+        break;
+      case "circle":
+        circle(10,p.x,p.y);
+        break;
+      case "rect":
+        rect(2, p.x,p.y);
+        break;
+      case "diamond":
+        diamond(2, p.x, p.y);
+        break;
+     }
+
+     context.fillStyle = p.color;
+		 p.x += p.vx;
+		 p.y += p.vy;
+		 if(p.x < -50) p.x = canvas.width+50;
+		 if(p.y < -50) p.y = canvas.height+50;
+		 if(p.x > canvas.width+50) p.x = -50;
+		 if(p.y > canvas.height+50) p.y = -50;
+		 p.radius -= 1;
+	 }
+ }
+
+ function clearScreen(color) {
+	 //clears the screen and fills with the color of choice
+	 context.clearRect(0, 0, canvas.width, canvas.height);
+	 context.fillStyle = color;
+	 context.fillRect(0, 0, canvas.width, canvas.height);
+ }
+
+ function shape() {
+   var shapes = [
+     'triangle',
+     'star',
+     'circle',
+     'rect',
+     'diamond'
+   ]
+
+   var randomNumber = Math.floor(Math.random()*shapes.length);
+
+   return shapes[randomNumber];
+ }
+
+ function star(size, posX, posY){
+     //flip the orientation
+     size = -size;
+     context.beginPath();
+     context.moveTo(posX, posY);
+     context.lineTo(posX + (4*size), posY - (4*size));
+     context.lineTo(posX + (2*size), posY - (10*size));
+     context.lineTo(posX + (7*size), posY - (6*size));
+     context.lineTo(posX + (12*size), posY - (10*size));
+     context.lineTo(posX + (10*size), posY - (4*size));
+     context.lineTo(posX + (14*size), posY);
+     context.lineTo(posX + (9*size), posY);
+     context.lineTo(posX + (7*size), posY + (5*size));
+     context.lineTo(posX + (5*size), posY);
+     context.fill();
+ }
+
+ function triangle(size, posX, posY){
+     //flip the orientation
+     size = -size;
+     context.beginPath();
+     context.moveTo(posX, posY);
+     context.lineTo(posX+(25*size),posY+(50*size));
+     context.lineTo(posX+(50*size),posY);
+     context.fill();
+ }
+
+ function circle(size, posX, posY){
+   context.beginPath();
+   context.arc(posX, posY, size, Math.random()*6, Math.random()*6, false);
+   context.fill();
+ }
+
+ function rect(size, posX, posY){
+   context.beginPath();
+   context.fillRect(posX, posY, Math.random()*30, size*15);
+   context.closePath();
+ }
+
+ function diamond(size, posX, posY){
+  context.beginPath();
+	context.moveTo (posX, posY);
+	context.lineTo(posX+(5*size),posY+(10*size));
+	context.lineTo(posX, posY+(20*size));
+	context.lineTo(posX-(5*size), posY+(10*size));
+	context.fill();
+ }
+
+ window.onload = function() {
+ 	 canvas = document.getElementById('canvas');
+	 context = canvas.getContext('2d');
+	 makeParticles();
+	 timer = setInterval(moveParticles, 100);
+	 timerRestart = setInterval(makeParticles, 6500);
+ }
+</script>
+</head>
+<body>
+	<canvas id="canvas" width="1260" height="685"></canvas>
+</body>
+</html>
