@@ -9,6 +9,11 @@ canvas {
 }
 </style>
  <script>
+
+var audio = new Audio('bgMusic.mp3');
+audio.play();
+audio.loop = true;
+
  var canvas;
  var context;
  var particles;
@@ -34,15 +39,15 @@ canvas {
 	 //this.y = Math.random()*canvas.height;
 	 this.x = canvas.width/2;
 	 this.y = canvas.height/2;
-	 this.vx = Math.random()*10-5;
-	 this.vy = Math.random()*10-5;
-	 var colors = ["red", "Crimson ", "DarkRed ", "orange", "FireBrick ", "DarkOrange", "white"];
+	 this.vx = Math.random()*40-5;
+	 this.vy = Math.random()*40-5;
+	 var colors = ["blue", "Crimson ", "DarkRed ", "orange", "FireBrick ", "cyan", "white"];
 	 this.color = colors[Math.floor(Math.random()*colors.length)];
-	 this.radius = 30;
+	 this.radius = 50;
  }
  function moveParticles() {
 	 //partially clear the screen to fade previous circles, and draw a new particle at each new coordinate
-	 context.globalCompositeOperation = "source-atop";
+	 context.globalCompositeOperation = "destination-in";
 	 context.fillStyle = "rgba(0, 0, 0, 0.3)";
 	 context.fillRect(0, 0, canvas.width, canvas.height);
 	 context.globalCompositeOperation = "lighter";
@@ -158,6 +163,7 @@ context.fillText("German", canvas.width/2, canvas.height/2);
 	 timer = setInterval(moveParticles, 100);
 	 timerRestart = setInterval(makeParticles, 6500);
  }
+
 </script>
 </head>
 <body>
